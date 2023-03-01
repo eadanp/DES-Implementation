@@ -31,13 +31,17 @@ int revIP[] = {40, 8, 48, 16, 56, 24, 64, 32,
                35, 3, 43, 11, 51, 19, 59, 27,
                34, 2, 42, 10, 50, 18, 58, 26,
                33, 1, 41,  9, 49, 17, 57, 25};
-               
+
 
 int main(){
     string message;
     string binary_message  =""; //The message input after binary convertion
+    string masterKey;
 
-
+    cout << "Please enter your secret message" << endl;
+    cin >> message;
+    cout << "Please enter your secret key" << endl;
+    cin >> masterKey;
 
     return 0;
 }
