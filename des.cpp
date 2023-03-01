@@ -32,16 +32,31 @@ int revIP[] = {40, 8, 48, 16, 56, 24, 64, 32,
                34, 2, 42, 10, 50, 18, 58, 26,
                33, 1, 41,  9, 49, 17, 57, 25};
 
-
+//Function to convert plaintext message to 8 bit binary string using the bitset library and to_string() method.
+string toBinary64(string messeage){
+    string binaryMessage = "";
+    for(int i = 0; i < messeage.length(); i++){
+        binaryMessage += bitset<8>(messeage[i]).to_string();
+    }
+    int padding = 64 - (binaryMessage.length() % 64); // calculates how many 0s needs to be add to creates 64 bit blocks.
+    //adds the padding to the binary message.
+    if(padding != 64){
+        binaryMessage += string(padding, 0);
+    }
+    return binaryMessage;
+}
 int main(){
     string message;
-    string binary_message  =""; //The message input after binary convertion
+    string binary_message; //The message input after binary convertion
     string masterKey;
 
     cout << "Please enter your secret message" << endl;
-    cin >> message;
+    getline(cin, message);
     cout << "Please enter your secret key" << endl;
     cin >> masterKey;
+
+    binary_message = toBinary64(message);
+    cout << binary_message;
 
     return 0;
 }
