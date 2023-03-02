@@ -129,6 +129,16 @@ const int SBoxes[8][4][16]=
         2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11 
     }};
 
+//Function to compress 64bit key to 56bit key
+string MasterSubKeyGenerator(string masterKey){
+
+}
+
+//Function to create 16 48 subkeys
+string SubKeyGenerator(string masterSubKey){
+
+}
+
 //Function to convert plaintext message to 8 bit binary string using the bitset library and to_string() method.
 string ToBinary64(string messeage){
     string binaryMessage = "";
@@ -164,11 +174,14 @@ int main(){
     getline(cin, message);
     cout << "Please enter your secret key" << endl;
     cin >> masterKey;
-/*
-    TEST CODE:
+
+    /*TEST CODE:
     binary_message = ToBinary64(message);
     cout << binary_message;
-    cout << endl << InitialPermutation(binary_message);
-*/
+    for (int i = 0; i < binary_message.length(); i += 64)
+    {
+        cout << endl << InitialPermutation(binary_message).substr(i, 64);
+    }
+    */
     return 0;
 }
