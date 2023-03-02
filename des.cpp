@@ -131,9 +131,12 @@ const int SBoxes[8][4][16]=
 
 //Function to compress 64bit key to 56bit key
 string MasterSubKeyGenerator(string masterKey){
-// bro this shit better work
-// if this doesnt its gonna be annoying 
-// last line just for testing
+    string compMaster = "";
+    bitset<56> permkey;
+    for(int i = 0; i < 56; i++){ 
+		permkey[i] = masterKey[PC1[i]-1]; 
+    } 
+    compMaster += permkey.to_string();
 }
 
 //Function to create 16 48 subkeys
