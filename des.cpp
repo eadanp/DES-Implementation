@@ -130,27 +130,48 @@ const int SBoxes[8][4][16]=
     }};
 
 //Function to compress 64bit key to 56bit key
-string MasterSubKeyGenerator(string masterKey){
-    string compMaster = "";
-    bitset<56> permkey;
-    for(int i = 0; i < 56; i++){ 
-		permkey[i] = masterKey[PC1[i]-1]; 
-    } 
-    compMaster += permkey.to_string();
-}
 
-//Function to create 16 48 subkeys
-string SubKeyGenerator(string masterSubKey){
-    
-    for(int i = 0; i < 16; i++){
-        string leftSide = masterSubKey.substr(0,28);
-        string rightSide = masterSubKey.substr(28, 28);
-        bitset<48> permuted;
-        for(int j = 0; j < 48; j++){ 
-		    permuted[j] = masterSubKey[PC2[j]-1]; 
-        }    
+//Function to shift array n positions
+string LeftShift(string key, int shift){
+    string shifted = "";
+    if(shift == 1){
+        for(int i = 1; i < key.length(); i++){
+            shifted += key[i];
+        }
+        shifted += key[0];
     }
+    else if(shift == 2){
+        for(int i = 2; i < key.length(); i++){
+            shifted += key[i];
+        }
+        shifted += key[0];
+        shifted += key[1];
+    }
+    return shifted;
 
+} 
+//Function to create 16 48bit subkeys
+string SubKeyGenerator(string masterKey){
+    //compress 64bit key to 56bit key
+    string permkey = "";
+    for(int i = 0; i < 56; i++){ 
+		permkey += masterKey[PC1[i]-1]; 
+    } 
+    //creating subkeys
+    string leftSide = permkey.substr(0,28);
+    string rightSide = permkey.substr(28, 28);
+    string subKeys = "";
+    for(int i = 0; i < 16; i++){
+        leftSide = LeftShift(leftSide, leftShift[i]);
+        rightSide = LeftShift(rightSide, leftShift[i]);
+        string prePermute = leftSide + rightSide;
+        string roundKey = "";
+        for(int j = 0; j < 48; j++){ 
+		    roundKey += prePermute[PC2[j]-1]; 
+        }
+        subKeys += roundKey;
+    }
+    return subKeys;
 }
 
 //Function to convert plaintext message to 8 bit binary string using the bitset library and to_string() method.
@@ -179,12 +200,14 @@ string InitialPermutation(string binaryMessage){
     }
     return permutedBlocks;
 }
+/*
 string leftBlock(string permutedBlock){
     string left = permutedBlock.substr(0,28);
 }
 string rightBlock(string permutedBlock){
     string right = permutedBlock.substr(28,28);
 }
+*/
 int main(){
     string message;
     string binary_message; //The message input after binary convertion
@@ -198,9 +221,9 @@ int main(){
     /*TEST CODE:
     binary_message = ToBinary64(message);
     cout << binary_message;
-    for (int i = 0; i < binary_message.length(); i += 64)
+    for (int i = 0; i < 768; i += 48)
     {
-        cout << endl << InitialPermutation(binary_message).substr(i, 64);
+        cout << endl << endl <<SubKeyGenerator(masterKey).substr(i, 48);
     }
     */
     return 0;
