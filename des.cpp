@@ -173,6 +173,12 @@ string InitialPermutation(string binaryMessage){
     }
     return permutedBlocks;
 }
+string leftBlock(string permutedBlock){
+    string left = permutedBlock.substr(0,28);
+}
+string rightBlock(string permutedBlock){
+    string right = permutedBlock.substr(28,28);
+}
 int main(){
     string message;
     string binary_message; //The message input after binary convertion
