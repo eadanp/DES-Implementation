@@ -141,9 +141,15 @@ string MasterSubKeyGenerator(string masterKey){
 
 //Function to create 16 48 subkeys
 string SubKeyGenerator(string masterSubKey){
-//sfsf
-//
-//
+    
+    for(int i = 0; i < 16; i++){
+        string leftSide = masterSubKey.substr(0,28);
+        string rightSide = masterSubKey.substr(28, 28);
+        bitset<48> permuted;
+        for(int j = 0; j < 48; j++){ 
+		    permuted[j] = masterSubKey[PC2[j]-1]; 
+        }    
+    }
 
 }
 
@@ -172,12 +178,6 @@ string InitialPermutation(string binaryMessage){
         permutedBlocks += permuted.to_string();
     }
     return permutedBlocks;
-}
-string leftBlock(string permutedBlock){
-    string left = permutedBlock.substr(0,28);
-}
-string rightBlock(string permutedBlock){
-    string right = permutedBlock.substr(28,28);
 }
 int main(){
     string message;
