@@ -137,6 +137,7 @@ string MasterSubKeyGenerator(string masterKey){
 //Function to create 16 48 subkeys
 string SubKeyGenerator(string masterSubKey){
 
+
 }
 
 //Function to convert plaintext message to 8 bit binary string using the bitset library and to_string() method.
