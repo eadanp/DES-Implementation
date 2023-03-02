@@ -131,7 +131,9 @@ const int SBoxes[8][4][16]=
 
 //Function to compress 64bit key to 56bit key
 string MasterSubKeyGenerator(string masterKey){
-
+// bro this shit better work
+// if this doesnt its gonna be annoying 
+// last line just for testing
 }
 
 //Function to create 16 48 subkeys
