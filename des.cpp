@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <bitset>
+#include <sstream>
 
 using namespace std;
 
@@ -128,8 +129,25 @@ const int SBoxes[8][4][16]=
         7,11,4,1,9,12,14,2,0,6,10,13,15,3,5,8, 
         2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11 
     }};
-    string subKeys[16] = {};
+string subKeys[16] = {};
 
+string dectoBin (string n){
+    stringstream num(n);
+    int number = 0;
+    num >> number;
+    string binary = "";
+    string ordered = "";
+    int i = 0;
+    while(number > 0){
+        binary += to_string(number % 2);
+        number = number / 2;
+        i++;
+    }
+    for(int j = i - 1; j >= 0; j--){
+        ordered += binary[j];
+    }
+    return ordered;
+}
 //Function to shift array n positions
 string LeftShift(string key, int shift){
     string shifted = "";
@@ -146,6 +164,7 @@ string LeftShift(string key, int shift){
         shifted += key[0];
         shifted += key[1];
     }
+    cout << endl << "shifting by " << shift;
     return shifted;
 
 } 
@@ -168,6 +187,7 @@ void SubKeyGenerator(string masterKey){
 		    roundKey += prePermute[PC2[j]-1]; 
         }
         subKeys[i] = roundKey;
+        cout << endl << endl << "Subkey " << i << ": " << subKeys[i];
     }
 }
 
@@ -182,21 +202,26 @@ string ToBinary64(string messeage){
     if(padding != 64){
         binaryMessage += string(padding, '0');
     }
+    cout << endl << endl << "the binary message is:" << binaryMessage;
     return binaryMessage;
+    
 }
 //Function to create blocks of 64bits and apply initial permutaion on each block
 string InitialPermutation(string message){
-    ToBinary64(message);
+    string binaryMessage = ToBinary64(message);
     string permutedBlocks = "";
-    for(int i = 0; i < message.length(); i  += 64){
-        bitset<64> block(message.substr(i, 64));
-        bitset<64> permuted;
+    string permuted = "";
+    for(int i = 0; i < binaryMessage.length(); i  += 64){
+        string block = binaryMessage.substr(i, 64);
+        
         for(int j = 0; j < 64; j++){
-            permuted[j] = block[IP[j]-1];
+            permuted += block[IP[j]-1];
         }
-        permutedBlocks += permuted.to_string();
+        
     }
-    return permutedBlocks;
+    cout << endl << endl << "Initial Permutaion: " << permuted;
+    return permuted;
+    
 }
 //Encryption Functions:
 
@@ -206,6 +231,7 @@ string Expansion(string binaryText){
     for(int i = 0; i < 48; i++){
         expanded += binaryText[EP[i]-1];
     }
+    cout << endl << endl << "expanded string: " << expanded;
     return expanded;
 }
 //XOR Function
@@ -228,25 +254,29 @@ string F32(string plainRight, string subKey){
     string expanded = Expansion(plainRight);
     string xored = XOR(expanded, subKey);
     string sBoxed [8];
-    string preboxed[8];
+    string preboxed;
     string binary = "";
+    //XOR function call
+    preboxed = xored.substr(0,6);
+    cout << endl << endl << "Fbox xor: " << preboxed;
     for (int j = 0; j < 8; j++)
     {
-            //XOR function call
-            preboxed[j] = xored.substr(0,6);
             //S-BOXes
-            string padded = preboxed[j].substr(0,1) + preboxed[j].substr(5,1);
-            string middle = preboxed[j].substr(1,4); 
+            string padded = preboxed.substr(0,1) + preboxed.substr(5,1);
+            string middle = preboxed.substr(1,4); 
             int padding = stoi(padded, nullptr, 2);//to convert binary to decimal
             int middleVal = stoi(middle, nullptr, 2);//to convert binary to decimal
-            sBoxed[j] += SBoxes[j][padding][middleVal];
-            binary += bitset<6>(sBoxed[j]).to_string();
+            sBoxed[j] += to_string(SBoxes[j][padding][middleVal]);
+            cout << endl << endl << "SBox location is: " << sBoxed[j];
+            binary += dectoBin(sBoxed[j]);
+            //cout << endl << endl << binary;
     }
-    cout << endl << binary << endl;
+    cout << endl << endl << " after SBoxes the string is: " << binary;
     //permutation
     for(int k=0; k<32 ;k++){
         permSbox += binary[PT[k]-1];
     }   
+    cout << endl << endl << "the SBox after permutation is: " << permSbox;
     return permSbox;
 }
 //Encryption
@@ -262,13 +292,15 @@ string Encryption64(string message, string masterKey){
         left = temp;
     }
     string preCipher = right + left;
-    string cipherText = "";
+    string cipherBinary = "";
     for(int i = 0; i < 64; i++){
-        cipherText += preCipher[REV_IP[i]-1];
+        cipherBinary += preCipher[REV_IP[i]-1];
     }
-    return cipherText;
+    cout << endl << endl << "the cipher binary text is: " << cipherBinary;
+    return cipherBinary;
 
 }
+
 
 
 int main(){
@@ -279,9 +311,9 @@ int main(){
     getline(cin, message);
     cout << "Please enter your secret key" << endl;
     cin >> masterKey;
-    string cipherText = Encryption64(message, masterKey);
     cout << endl << endl << "message: " << message;
-    cout << endl <<"Cipher Text: " << cipherText;
+    string cipherText = Encryption64(message, masterKey);
+    
    // SubKeyGenerator(masterKey);
    // for(int i = 0; i < 16; i++){
    //     cout << subKeys[i] << endl;
