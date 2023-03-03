@@ -218,12 +218,12 @@ string BinToText(string bin){
     return ascii_string;
 }
 //Function to create blocks of 64bits and apply initial permutaion on each block
-string InitialPermutation(){
+string InitialPermutation(string block64){
     
     string permutedBlocks = "";
     string permuted = "";
-    for(int i = 0; i < message.length(); i  += 64){
-        string block = message.substr(i, 64);
+    for(int i = 0; i < block64.length(); i  += 64){
+        string block = block64.substr(i, 64);
         
         for(int j = 0; j < 64; j++){
             permuted += block[IP[j]-1];
@@ -293,9 +293,9 @@ string F32(string plainRight, string subKey){
     return permSbox;
 }
 //Encryption
-string Encryption64(){
+string Encryption64(string block64){
     
-    string permuted = InitialPermutation();
+    string permuted = InitialPermutation(block64);
     string left = permuted.substr(0,32);
     string right = permuted.substr(32,32);
     string temp = "";
@@ -316,6 +316,7 @@ string Encryption64(){
 }
 
 //Decryption Function
+/*
 string Decryption64(string cipherText){
     //Reversing subKeys order
     int i = 15;
@@ -331,6 +332,16 @@ string Decryption64(string cipherText){
 	message = cipherText;
 	string decrypted = Encryption64();
     return decrypted;
+}
+*/
+
+string ECB (){
+    string encrypted = "";
+    for(int i=0; i<message.length();i+=64){
+        string block = message.substr(i,64);
+        encrypted += Encryption64(block);  
+    }
+    return encrypted;
 }
 
 
@@ -353,10 +364,10 @@ int main(){
     cout << endl << "Message: " << message;
     SubKeyGenerator(masterKey);
     message = ToBinary64(message);
-    string cipherBinary = Encryption64();
+    string cipherBinary = ECB();
     cout << endl << endl << "the cipher binary text is: " << cipherBinary;
     cout << endl << "the cipher text is: " << BinToText(cipherBinary);
-    string decrypted = Decryption64(cipherBinary);
-	cout<< endl << "Decrypted text:"<<BinToText(decrypted) <<endl;
+    //string decrypted = Decryption64(cipherBinary);
+	//cout<< endl << "Decrypted text:"<<BinToText(decrypted) <<endl;
     return 0;
 }
