@@ -130,23 +130,23 @@ const int SBoxes[8][4][16]=
         2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11 
     }};
 string subKeys[16] = {};
+string message;
 
-string dectoBin (string n){
-    stringstream num(n);
-    int number = 0;
-    num >> number;
+//Converts Decimal to Binary
+string DecToBin (int n){
+
     string binary = "";
     string ordered = "";
     int i = 0;
-    while(number > 0){
-        binary += to_string(number % 2);
-        number = number / 2;
+    while(n > 0){
+        binary = to_string(n % 2) + binary;
+        n = n / 2;
         i++;
     }
-    for(int j = i - 1; j >= 0; j--){
-        ordered += binary[j];
-    }
-    return ordered;
+    while(binary.length() < 4){
+		binary = "0" + binary;
+	}
+    return binary;
 }
 //Function to shift array n positions
 string LeftShift(string key, int shift){
@@ -164,7 +164,7 @@ string LeftShift(string key, int shift){
         shifted += key[0];
         shifted += key[1];
     }
-    cout << endl << "shifting by " << shift;
+    //cout << endl << "shifting by " << shift;
     return shifted;
 
 } 
@@ -187,7 +187,7 @@ void SubKeyGenerator(string masterKey){
 		    roundKey += prePermute[PC2[j]-1]; 
         }
         subKeys[i] = roundKey;
-        cout << endl << endl << "Subkey " << i << ": " << subKeys[i];
+        //cout << endl << endl << "Subkey " << i << ": " << subKeys[i];
     }
 }
 
@@ -202,24 +202,35 @@ string ToBinary64(string messeage){
     if(padding != 64){
         binaryMessage += string(padding, '0');
     }
-    cout << endl << endl << "the binary message is:" << binaryMessage;
+    //cout << endl << endl << "the binary message is:" << binaryMessage;
     return binaryMessage;
     
 }
+//Converts binary string to ASCII text using Bitset
+string BinToText(string bin){
+    bitset<8> bits;
+    string ascii_string;
+    for (size_t i = 0; i < bin.size(); i += 8) {
+    bits = bitset<8>(bin.substr(i, 8));
+    char c = char(bits.to_ulong());
+    ascii_string += c;
+    }
+    return ascii_string;
+}
 //Function to create blocks of 64bits and apply initial permutaion on each block
-string InitialPermutation(string message){
-    string binaryMessage = ToBinary64(message);
+string InitialPermutation(){
+    
     string permutedBlocks = "";
     string permuted = "";
-    for(int i = 0; i < binaryMessage.length(); i  += 64){
-        string block = binaryMessage.substr(i, 64);
+    for(int i = 0; i < message.length(); i  += 64){
+        string block = message.substr(i, 64);
         
         for(int j = 0; j < 64; j++){
             permuted += block[IP[j]-1];
         }
         
     }
-    cout << endl << endl << "Initial Permutaion: " << permuted;
+   // cout << endl << endl << "Initial Permutaion: " << permuted;
     return permuted;
     
 }
@@ -231,7 +242,7 @@ string Expansion(string binaryText){
     for(int i = 0; i < 48; i++){
         expanded += binaryText[EP[i]-1];
     }
-    cout << endl << endl << "expanded string: " << expanded;
+    //cout << endl << endl << "expanded string: " << expanded;
     return expanded;
 }
 //XOR Function
@@ -253,36 +264,38 @@ string F32(string plainRight, string subKey){
     string permSbox = "";
     string expanded = Expansion(plainRight);
     string xored = XOR(expanded, subKey);
-    string sBoxed [8];
-    string preboxed;
+    int sBoxed;
+    
     string binary = "";
     //XOR function call
-    preboxed = xored.substr(0,6);
-    cout << endl << endl << "Fbox xor: " << preboxed;
+    
+    
     for (int j = 0; j < 8; j++)
     {
             //S-BOXes
-            string padded = preboxed.substr(0,1) + preboxed.substr(5,1);
-            string middle = preboxed.substr(1,4); 
+            string padded = xored.substr(j*6,1) + xored.substr(j*6 + 5,1);
+            string middle = xored.substr(j*6 + 1,1) + xored.substr(j*6 + 2,1) + xored.substr(j*6 + 3,1) + xored.substr(j*6 + 4,1); 
             int padding = stoi(padded, nullptr, 2);//to convert binary to decimal
+            //cout << endl << "row is: " << padding << endl;
             int middleVal = stoi(middle, nullptr, 2);//to convert binary to decimal
-            sBoxed[j] += to_string(SBoxes[j][padding][middleVal]);
-            cout << endl << endl << "SBox location is: " << sBoxed[j];
-            binary += dectoBin(sBoxed[j]);
+            //cout << endl << "col is: " << middleVal << endl;
+            sBoxed = (SBoxes[j][padding][middleVal]);
+            //cout << endl << endl << "SBox location is: " << sBoxed;
+            binary += DecToBin(sBoxed);
             //cout << endl << endl << binary;
     }
-    cout << endl << endl << " after SBoxes the string is: " << binary;
+    //cout << endl << endl << " after SBoxes the string is: " << binary;
     //permutation
     for(int k=0; k<32 ;k++){
         permSbox += binary[PT[k]-1];
     }   
-    cout << endl << endl << "the SBox after permutation is: " << permSbox;
+   // cout << endl << endl << "the SBox after permutation is: " << permSbox;
     return permSbox;
 }
 //Encryption
-string Encryption64(string message, string masterKey){
-    SubKeyGenerator(masterKey);
-    string permuted = InitialPermutation(message);
+string Encryption64(){
+    
+    string permuted = InitialPermutation();
     string left = permuted.substr(0,32);
     string right = permuted.substr(32,32);
     string temp = "";
@@ -296,35 +309,54 @@ string Encryption64(string message, string masterKey){
     for(int i = 0; i < 64; i++){
         cipherBinary += preCipher[REV_IP[i]-1];
     }
-    cout << endl << endl << "the cipher binary text is: " << cipherBinary;
+    //cout << endl << endl << "the cipher binary text is: " << cipherBinary;
+    
     return cipherBinary;
 
 }
 
+//Decryption Function
+string Decryption64(string cipherText){
+    //Reversing subKeys order
+    int i = 15;
+	int j = 0;
+	while(i > j)
+	{
+		string temp = subKeys[i];
+		subKeys[i] = subKeys[j];
+		subKeys[j] = temp;
+		i--;
+		j++;
+	}
+	message = cipherText;
+	string decrypted = Encryption64();
+    return decrypted;
+}
 
 
 int main(){
-    string message;
-    string binary_message; //The message input after binary convertion
-    string masterKey;
-    cout << "Please enter your secret message" << endl;
-    getline(cin, message);
-    cout << "Please enter your secret key" << endl;
-    cin >> masterKey;
-    cout << endl << endl << "message: " << message;
-    string cipherText = Encryption64(message, masterKey);
-    
-   // SubKeyGenerator(masterKey);
-   // for(int i = 0; i < 16; i++){
-   //     cout << subKeys[i] << endl;
-    //}
-    //string a = "0101";
-    //string b = "1101";
-    //cout << XOR(a, b);
+    string masterKey;//64Bit key
 
-    /*TEST CODE:
-    binary_message = ToBinary64(message);
-    cout << binary_message;
-    */
+    //secret message input
+    cout << "Please enter your secret message:" << endl;
+    getline(cin, message);
+
+    //key input
+    while(masterKey.length() != 64){
+        cout << "Please enter your secret key:" << endl;
+        cin >> masterKey;
+        if(masterKey.length() != 64){
+            cout << "Your Key is not 64Bits. Please re-enter your Key." << endl;
+        }
+    }
+
+    cout << endl << "Message: " << message;
+    SubKeyGenerator(masterKey);
+    message = ToBinary64(message);
+    string cipherBinary = Encryption64();
+    cout << endl << endl << "the cipher binary text is: " << cipherBinary;
+    cout << endl << "the cipher text is: " << BinToText(cipherBinary);
+    string decrypted = Decryption64(cipherBinary);
+	cout<< endl << "Decrypted text:"<<BinToText(decrypted) <<endl;
     return 0;
 }
