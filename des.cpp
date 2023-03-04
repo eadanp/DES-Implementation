@@ -6,12 +6,7 @@
 * Description: Implemented Data Encryption Standard (DES)
 */
 
-#include <iostream>
-#include <string>
-#include <bitset>
-
-using namespace std;
-
+#include "des.h"
 
 //left shift.
 const int leftShift[16] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 }; //vi = 1 for i ∈ {1, 2, 9, 16}; vi = 2 otherwise
@@ -129,7 +124,7 @@ const int SBoxes[8][4][16]=
         2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11 
     }};
 string subKeys[16] = {};
-string message;
+string message = "";
 
 //Converts Decimal to Binary
 string DecToBin (int n){
@@ -339,6 +334,7 @@ string Decryption64(string cipherText){
 	string decrypted = ECB();
     return decrypted;
 }
+//Function to organize binary string to 64bits blocks
 void Organize64(string text){
     for(int i = 0; i < text.length(); i += 64){
         string block = text.substr(i, 64);
@@ -347,30 +343,3 @@ void Organize64(string text){
 }
 
 
-int main(){
-    string masterKey;//64Bit key
-
-    //secret message input
-    cout << "Please enter your secret message:" << endl;
-    getline(cin, message);
-
-    //key input
-    while(masterKey.length() != 64){
-        cout << "Please enter your secret key:" << endl;
-        cin >> masterKey;
-        if(masterKey.length() != 64){
-            cout << "Your Key is not 64Bits. Please re-enter your Key." << endl;
-        }
-    }
-
-    cout << endl << "Message: " << message;
-    SubKeyGenerator(masterKey);
-    message = ToBinary64(message);
-    string cipherBinary = ECB();
-    cout << endl << endl << "the cipher binary text is: " << endl;
-    Organize64(cipherBinary);
-    cout << endl << "the cipher text is: " << BinToText(cipherBinary);
-    //string decrypted = Decryption64(cipherBinary);
-	//cout<< endl << "Decrypted text:"<<BinToText(decrypted) <<endl;
-    return 0;
-}
