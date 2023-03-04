@@ -1,7 +1,7 @@
 /*
 * Eadan Plotnizky and Naama Scandarion
 * Course:  CIS5371/CIS 4634
-* rofessor: Mehrdad Nojoumian 
+* Professor: Mehrdad Nojoumian 
 *
 * Description: Implemented Data Encryption Standard (DES)
 */
@@ -9,7 +9,6 @@
 #include <iostream>
 #include <string>
 #include <bitset>
-#include <sstream>
 
 using namespace std;
 
@@ -314,9 +313,16 @@ string Encryption64(string block64){
     return cipherBinary;
 
 }
-
+// Function to perform ECB Mode Of Operation
+string ECB (){
+    string encrypted = "";
+    for(int i=0; i<message.length();i+=64){
+        string block = message.substr(i,64);
+        encrypted += Encryption64(block);  
+    }
+    return encrypted;
+}
 //Decryption Function
-/*
 string Decryption64(string cipherText){
     //Reversing subKeys order
     int i = 15;
@@ -330,18 +336,14 @@ string Decryption64(string cipherText){
 		j++;
 	}
 	message = cipherText;
-	string decrypted = Encryption64();
+	string decrypted = ECB();
     return decrypted;
 }
-*/
-
-string ECB (){
-    string encrypted = "";
-    for(int i=0; i<message.length();i+=64){
-        string block = message.substr(i,64);
-        encrypted += Encryption64(block);  
+void Organize64(string text){
+    for(int i = 0; i < text.length(); i += 64){
+        string block = text.substr(i, 64);
+        cout << block << endl;  
     }
-    return encrypted;
 }
 
 
@@ -365,7 +367,8 @@ int main(){
     SubKeyGenerator(masterKey);
     message = ToBinary64(message);
     string cipherBinary = ECB();
-    cout << endl << endl << "the cipher binary text is: " << cipherBinary;
+    cout << endl << endl << "the cipher binary text is: " << endl;
+    Organize64(cipherBinary);
     cout << endl << "the cipher text is: " << BinToText(cipherBinary);
     //string decrypted = Decryption64(cipherBinary);
 	//cout<< endl << "Decrypted text:"<<BinToText(decrypted) <<endl;
