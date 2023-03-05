@@ -37,7 +37,7 @@ int main(){
         }
         else if(exit == 2){
            //secret message input
-            cout << endl << "Please enter your encrypted message: ";
+            cout << endl << "Please enter your binary cipher string: ";
             cin.ignore();
             getline(cin, message);
 
@@ -51,7 +51,7 @@ int main(){
                 }
             }       
             masterKey = ToBinary64(masterKey);
-            message = ToBinary64(message);
+            //message = ToBinary64(message);
 
             cout << endl << "Encrypted Message: " << BinToText(message) << endl;
             string decrypted = Decryption64(masterKey);
