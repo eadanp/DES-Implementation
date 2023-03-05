@@ -51,7 +51,7 @@ int main(){
                 }
             }       
             masterKey = ToBinary64(masterKey);
-            //message = ToBinary64(message);
+            
 
             cout << endl << "Encrypted Message: " << BinToText(message) << endl;
             string decrypted = Decryption64(masterKey);
