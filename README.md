@@ -1,33 +1,28 @@
 # DES-Implementation
-implemented Data Encryption Standard (DES) Using C++
 
-ASSignment 02 
- 
-Mehrdad Nojoumian 
-CIS5371/CIS 4634: Practical Aspects of Modern Cryptography 
- 
+Authors: Eadan Plotnizky, Naama Scandarion
 
- 
-For this assignment, you must implement the Data Encryption Standard (DES) algorithm with 
-any programming language that you are comfortable with. The recommendation is to use C/C++ 
-or Java. You can accomplish this assignment individually or by forming a team of 2 students. 
- 
-You can utilize the publically available tables/functions in order to implement the DES. You can 
-find these permutation tables/functions in some reference books or over the Internet. 
- 
-You algorithm should get a plaintext as well as a “secret key” from the user and then perform 
-encryption (generating the ciphertext from the plaintext) and decryption (generating the original 
-plaintext from the ciphertext). 
- 
-You  can  also  select  any  “mode  of  operations”  that  you  want.  All  the  necessary  technical 
-materials are available in the posted lectures on Canvas. 
- 
-You must submit all related files in a zip file on Canvas (just one file for each group, submitted 
-by the group leader). Make sure to include a “ReadMe.txt” file so that I know what you have 
-done and how your program can be executed. 
- 
-You will get one of the following options as your grade for this assignment: 
-Completely Satisfactory (CS), Somehow Satisfactory (SS), and Not Satisfactory (NS) 
- 
-Please don’t copy-and-pasts any code from the Internet. The main objective of this course and 
-its assignments is to help you deeply understand these cryptographic algorithms/protocols. 
+Professor: Mehrdad Nojoumian
+
+Programming Language: C++
+
+Description:
+This program let a user choose if he wants to encrypt or decrypt a message using DES algorithm with ECB Mode Of Operation, or to exit the program.
+
+Encryption: The user will input a secret message to be encrypted and a secret 8 character password/key.
+The output will be the encrypted binary string and the encrypted cipher text.
+
+Decryption: The user will input an encrypted message to be decrypted and a secret 8 character password/key.
+The output will be the decrypted cipher text.
+
+To run the program through VSCode make sure you have a G++ compiler.
+
+Instructions:
+1. open Terminal
+2. make sure you are in the right directory
+Windows:
+1. type "g++ -o main.exe .\des.cpp .\main.cpp" to compile the program and to create an executable file.
+2. type "./main.exe" to run the executable through the terminal.
+MacOS (with bash terminal):
+1. type "g++ -o main.out des.cpp main.cpp" to compile the program and to create an executable file.
+2. type "./main.out" to run the executable through the terminal.

@@ -10,6 +10,7 @@
 
 //left shift.
 const int leftShift[16] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 }; //vi = 1 for i ∈ {1, 2, 9, 16}; vi = 2 otherwise
+const int rightShift[16] = { 0, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 }; //vi = 1 for i ∈ {2, 9, 16}; vi = 2 otherwise
 //key schedule bit selections (PC1 and PC2)
 //PC1
 const int PC1[56] = 
@@ -142,7 +143,27 @@ string DecToBin (int n){
 	}
     return binary;
 }
-//Function to shift array n positions
+//Function to shift array n positions to the right
+string RightShift(string key, int shift){
+    string shifted = "";
+    if(shift == 1){
+        shifted += key[key.length()-1];
+        for(int i = 0; i < key.length() - 1; i++){
+            shifted += key[i];
+        }
+    }
+    else if(shift == 2){
+        shifted += key[key.length() - 2];
+        shifted += key[key.length() - 1];
+        for(int i = 0; i < key.length() - 2; i++){
+            shifted += key[i];
+        }
+    }
+    //cout << endl << "shifting by " << shift;
+    return shifted;
+
+}
+//Function to shift array n positions to the left
 string LeftShift(string key, int shift){
     string shifted = "";
     if(shift == 1){
@@ -161,9 +182,9 @@ string LeftShift(string key, int shift){
     //cout << endl << "shifting by " << shift;
     return shifted;
 
-} 
-//Function to create 16 48bit subkeys
-void SubKeyGenerator(string masterKey){
+}  
+//Function to create 16 48bit encryption subkeys
+void EncryptionSubKeyGenerator(string masterKey){
     //compress 64bit key to 56bit key
     string permkey = "";
     for(int i = 0; i < 56; i++){ 
@@ -181,7 +202,36 @@ void SubKeyGenerator(string masterKey){
 		    roundKey += prePermute[PC2[j]-1]; 
         }
         subKeys[i] = roundKey;
-        //cout << endl << endl << "Subkey " << i << ": " << subKeys[i];
+        //cout << endl << endl << "Subkey " << i + 1 << ": " << subKeys[i];
+    }
+}
+void DecryptionSubKeyGenerator(string masterKey){
+    //compress 64bit key to 56bit key
+    string permkey = "";
+    for(int i = 0; i < 56; i++){ 
+		permkey += masterKey[PC1[i]-1]; 
+    } 
+    //creating subkeys
+    string leftSide = permkey.substr(0,28);
+    string rightSide = permkey.substr(28, 28);
+    
+    string prePermute = leftSide + rightSide;
+    string roundKey = "";
+    for(int j = 0; j < 48; j++){ 
+		roundKey += prePermute[PC2[j]-1]; 
+    }
+    subKeys[0] = roundKey;
+    //cout << endl << endl << "Subkey " << 0 + 1 << ": " << subKeys[0];
+    for(int i = 1; i < 16; i++){
+        leftSide = RightShift(leftSide, rightShift[i]);
+        rightSide = RightShift(rightSide, rightShift[i]);
+        prePermute = leftSide + rightSide;
+        roundKey = "";
+        for(int j = 0; j < 48; j++){ 
+		    roundKey += prePermute[PC2[j]-1]; 
+        }
+        subKeys[i] = roundKey;
+        //cout << endl << endl << "Subkey " << i + 1 << ": " << subKeys[i];
     }
 }
 
@@ -318,19 +368,9 @@ string ECB (){
     return encrypted;
 }
 //Decryption Function
-string Decryption64(string cipherText){
+string Decryption64(string masterKey){
     //Reversing subKeys order
-    int i = 15;
-	int j = 0;
-	while(i > j)
-	{
-		string temp = subKeys[i];
-		subKeys[i] = subKeys[j];
-		subKeys[j] = temp;
-		i--;
-		j++;
-	}
-	message = cipherText;
+    DecryptionSubKeyGenerator(masterKey);
 	string decrypted = ECB();
     return decrypted;
 }

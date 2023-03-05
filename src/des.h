@@ -16,9 +16,9 @@ using namespace std;
 string DecToBin (int n);
 //Function to shift array n positions
 string LeftShift(string key, int shift);
-//Function to create 16 48bit subkeys
-void SubKeyGenerator(string masterKey);
-
+//Function to create 16 48bit encryption and decryption subkeys
+void EncryptionSubKeyGenerator(string masterKey);
+void DecryptionSubKeyGenerator(string masterKey);
 //Function to convert plaintext message to 8 bit binary string using the bitset library and to_string() method.
 string ToBinary64(string messeage);
 //Converts binary string to ASCII text using Bitset
@@ -38,6 +38,6 @@ string Encryption64(string block64);
 // Function to perform ECB Mode Of Operation
 string ECB ();
 //Decryption Function
-string Decryption64(string cipherText);
+string Decryption64(string masterKey);
 //Function to organize binary string to 64bits blocks
 void Organize64(string text);
