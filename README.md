@@ -2,7 +2,7 @@
 
 ***Authors: Eadan Plotnizky, Naama Scandarion***
 
-**Programming Language: C++*
+**Programming Language: C++**
 
 ## Description:
 This program let a user choose if he wants to encrypt or decrypt a message using DES algorithm with ECB Mode Of Operation, or to exit the program.
