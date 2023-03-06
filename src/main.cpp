@@ -57,7 +57,7 @@ int main(){
             cout << endl << "Thank you for using our DES program!";
         }
         else {
-            cout << endl << "Please enter a choice from 1-3." << endl;
+            cout << endl << "Please enter a choice from 1-3." << endl << endl;
         }
     }
     
