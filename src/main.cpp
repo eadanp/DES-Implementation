@@ -20,10 +20,8 @@ int main(){
             cout << endl << "Please enter your 8 characters secret key: ";
             cin >> masterKey;
             while(masterKey.length() != 8){
-                if(masterKey.length() != 8){
-                    cout << "Your Key is not 8 characters. Please re-enter your Key: ";
-                    cin >> masterKey;
-                }
+                cout << "Your Key is not 8 characters. Please re-enter your Key: ";
+                cin >> masterKey;
             }       
             masterKey = ToBinary64(masterKey);
 
@@ -45,10 +43,8 @@ int main(){
             cout << endl << "Please enter your 8 characters secret key: ";
             cin >> masterKey;
             while(masterKey.length() != 8){
-                if(masterKey.length() != 8){
-                    cout << "Your Key is not 8 characters. Please re-enter your Key: ";
-                    cin >> masterKey;
-                }
+                cout << "Your Key is not 8 characters. Please re-enter your Key: ";
+                cin >> masterKey;
             }       
             masterKey = ToBinary64(masterKey);
             
