@@ -19,8 +19,8 @@ The output will be the decrypted cipher text.
 1. open Terminal
 2. make sure you are in the right directory
 ### Windows:
-3. type "g++ -o main.exe .\des.cpp .\main.cpp" to compile the program and to create an executable file.
-4. type "./main.exe" to run the executable through the terminal.
+3. type `g++ -o main.exe .\des.cpp .\main.cpp` to compile the program and to create an executable file.
+4. type `./main.exe` to run the executable through the terminal.
 ### MacOS (with bash terminal):
-3. type "g++ -o main.out des.cpp main.cpp" to compile the program and to create an executable file.
-4. type "./main.out" to run the executable through the terminal.
+3. type `g++ -o main.out des.cpp main.cpp` to compile the program and to create an executable file.
+4. type `./main.out` to run the executable through the terminal.
